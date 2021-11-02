@@ -1,6 +1,6 @@
 # Couper OIDC Gateway
 
-A ready to use [Couper](https://couper.io/) image to spin up an OpenID Connect gateway.
+A ready to use [Couper](https://github.com/avenga/couper) image to spin up an OpenID Connect gateway.
 
 _coming soon_
 
