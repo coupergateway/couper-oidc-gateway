@@ -28,7 +28,7 @@ server "oidc-gate" {
           "access_token=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
           "authvv=;HttpOnly;Secure;Path=${env.OIDC_CALLBACK_URL};Max-Age=0"
         ]
-        location = request.query.state != "" ? request.query.state[0] : "/"
+        location = default(relative_url(request.query.state[0]), "/")
       }
     }
   }
@@ -54,7 +54,7 @@ definitions {
         status = 303
         headers = {
           cache-control = "no-cache,no-store"
-          location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(request.path)}"
+          location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.url))}"
           set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=${env.OIDC_CALLBACK_URL}"
         }
       }
