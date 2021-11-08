@@ -28,7 +28,7 @@ server "oidc-gate" {
           "access_token=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
           "authvv=;HttpOnly;Secure;Path=${env.OIDC_CALLBACK_URL};Max-Age=0"
         ]
-        location = default(relative_url(request.query.state[0]), "/")
+        location = relative_url(request.query.state[0])
       }
     }
   }
