@@ -51,12 +51,22 @@ definitions {
 
     error_handler {
       response {
-        status = 303
+        status = 403
         headers = {
           cache-control = "no-cache,no-store"
-          location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.url))}"
+          content-type = "text/html"
           set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
         }
+        body = <<-EOB
+<!DOCTYPE html><html><head>
+<meta http-equiv="refresh" content="0;url=${beta_oauth_authorization_url("oidc")}&amp;state=${url_encode(relative_url(request.url))}"
+</head><body>
+<form action="${beta_oauth_authorization_url("oidc")}">
+<input type="hidden" name="state" value="${relative_url(request.url)}">
+<button type="submit">please log-in!</button>
+</form>
+</body></html>
+EOB
       }
     }
   }
