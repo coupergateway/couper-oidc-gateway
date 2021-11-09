@@ -70,6 +70,9 @@ definitions {
         }
         body = <<-EOB
 <!DOCTYPE html><html><head>
+<script>
+location.href = "/oidc/start?url=${url_encode(relative_url(request.url))}"
+</script>
 <meta http-equiv="refresh" content="0;url=/oidc/start?url=${url_encode(relative_url(request.url))}"
 </head><body>
 <a href="/oidc/start?url=${url_encode(relative_url(request.url))}">please log-in!</a>
