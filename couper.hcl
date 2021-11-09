@@ -16,6 +16,18 @@ server "oidc-gate" {
     }
   }
 
+  // OIDC start login
+  endpoint "/oidc/start" {
+    response {
+      status = 303
+      headers = {
+        cache-control = "no-cache,no-store"
+        location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
+        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
+      }
+    }
+  }
+
   // OIDC login callback
   endpoint "/oidc/callback" {
     access_control = ["oidc"]
@@ -55,16 +67,12 @@ definitions {
         headers = {
           cache-control = "no-cache,no-store"
           content-type = "text/html"
-          set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
         }
         body = <<-EOB
 <!DOCTYPE html><html><head>
-<meta http-equiv="refresh" content="0;url=${beta_oauth_authorization_url("oidc")}&amp;state=${url_encode(relative_url(request.url))}"
+<meta http-equiv="refresh" content="0;url=/oidc/start?url=${url_encode(relative_url(request.url))}"
 </head><body>
-<form action="${beta_oauth_authorization_url("oidc")}">
-<input type="hidden" name="state" value="${relative_url(request.url)}">
-<button type="submit">please log-in!</button>
-</form>
+<a href="/oidc/start?url=${url_encode(relative_url(request.url))}">please log-in!</a>
 </body></html>
 EOB
       }
