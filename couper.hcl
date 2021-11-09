@@ -16,6 +16,18 @@ server "oidc-gate" {
     }
   }
 
+  // OIDC start login
+  endpoint "/oidc/start" {
+    response {
+      status = 303
+      headers = {
+        cache-control = "no-cache,no-store"
+        location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
+        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=${env.OIDC_CALLBACK_URL}"
+      }
+    }
+  }
+
   // OIDC login callback
   endpoint "/oidc/callback" { # env.OIDC_CALLBACK_URL
     access_control = ["oidc"]
@@ -50,14 +62,7 @@ definitions {
     cookie = "access_token"
 
     error_handler {
-      response {
-        status = 303
-        headers = {
-          cache-control = "no-cache,no-store"
-          location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.url))}"
-          set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=${env.OIDC_CALLBACK_URL}"
-        }
-      }
+      error_file = "login.html"
     }
   }
 }
