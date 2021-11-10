@@ -23,13 +23,13 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
-        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
+        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
       }
     }
   }
 
   // OIDC login callback
-  endpoint "/oidc/callback" {
+  endpoint "/_couper/oidc/callback" {
     access_control = ["oidc"]
 
     response {
@@ -38,7 +38,7 @@ server "oidc-gate" {
         cache-control = "no-cache,no-store"
         set-cookie = [
           "access_token=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
-          "authvv=;HttpOnly;Secure;Path=/oidc/callback;Max-Age=0"
+          "authvv=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
         location = relative_url(request.query.state[0])
       }
@@ -51,7 +51,7 @@ definitions {
     configuration_url = env.OIDC_CONFIGURATION_URL
     client_id = env.OIDC_CLIENT_ID
     client_secret = env.OIDC_CLIENT_SECRET
-    redirect_uri = "/oidc/callback"
+    redirect_uri = "/_couper/oidc/callback"
     verifier_value = request.cookies.authvv
   }
 

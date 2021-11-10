@@ -6,9 +6,9 @@ _coming soon_
 
 The gateway uses the Authorization Code Grant Flow to connect to an OpenID Provider.
 
-The redirect endpoint for the flow is `/oidc/callback`.
+The redirect endpoint for the flow is `/_couper/oidc/callback`.
 
-You need to register a **confidential** client at the OpenID Provider with the redirect URI `https://<your-gateway-host>/oidc/callback`. During registration you get a client ID and a client secret.
+You need to register a **confidential** client at the OpenID Provider with the redirect URI `https://<your-gateway-host>/_couper/oidc/callback`. During registration you get a client ID and a client secret.
 
 ## Environment Variables
 
