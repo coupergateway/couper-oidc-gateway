@@ -12,16 +12,16 @@ You need to register a **confidential** client at the OpenID Provider with the r
 
 ## Environment Variables
 
-| Variable | Type | Description | Example |
-| :------- | :--- | :---------- | :------ |
-| `OIDC_CONFIGURATION_URL` | string | The URL of the OpenID configuration at the OpenID Provider | `https://.../.well-known/openid-configuration` |
-| `OIDC_CLIENT_ID` | string | The client ID of the client registered at the OpenID Provider | - |
-| `OIDC_CLIENT_SECRET` | string | The client secret | - |
-| `TOKEN_SECRET` | string | The secret used for signing the access token (the signature algorithm is `HS256`) | `$e(rE4` |
-| `TOKEN_TTL` | duration | The time-to-live of the access token | `2h` |
-| `TOKEN_COOKIE_NAME` | string | The name of the cookie storing the access token | `_couper_access_token` |
-| `ORIGIN` | string | The origin of the service to be protected | `https://www.example.com` |
-| `ORIGIN_HOSTNAME` | string | The value of the HTTP host header field for the request to the protected service | - |
+| Variable | Type | Default | Description | Example |
+| :------- | :--- | :------ | :---------- | :------ |
+| `OIDC_CONFIGURATION_URL` | string | - | The URL of the OpenID configuration at the OpenID Provider | `https://.../.well-known/openid-configuration` |
+| `OIDC_CLIENT_ID` | string | - | The client ID of the client registered at the OpenID Provider | - |
+| `OIDC_CLIENT_SECRET` | string | - | The client secret | - |
+| `TOKEN_SECRET` | string | `asdf` | The secret used for signing the access token (the signature algorithm is `HS256`) | `$e(rE4` |
+| `TOKEN_TTL` | duration | `2m` | The time-to-live of the access token | `2h` |
+| `TOKEN_COOKIE_NAME` | string | `_couper_access_token` | The name of the cookie storing the access token | `_couper_access_token` |
+| `ORIGIN` | string | - | The origin of the service to be protected | `https://www.example.com` |
+| `ORIGIN_HOSTNAME` | string | - | The value of the HTTP host header field for the request to the protected service | - |
 
 | Duration units | Description  |
 | :------------- | :----------- |
