@@ -23,7 +23,7 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
-        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
+        set-cookie = "${env.VERIFIER_COOKIE_NAME}=${beta_oauth_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
       }
     }
   }
@@ -38,7 +38,7 @@ server "oidc-gate" {
         cache-control = "no-cache,no-store"
         set-cookie = [
           "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
-          "authvv=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
+          "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
         location = relative_url(request.query.state[0])
       }
@@ -52,7 +52,7 @@ definitions {
     client_id = env.OIDC_CLIENT_ID
     client_secret = env.OIDC_CLIENT_SECRET
     redirect_uri = "/_couper/oidc/callback"
-    verifier_value = request.cookies.authvv
+    verifier_value = request.cookies[env.VERIFIER_COOKIE_NAME]
   }
 
   jwt "AccessToken" {
@@ -95,6 +95,7 @@ defaults {
     TOKEN_SECRET = "asdf"
     TOKEN_TTL = "1h"
     TOKEN_COOKIE_NAME = "_couper_access_token"
+    VERIFIER_COOKIE_NAME = "_couper_authvv"
     ORIGIN = ""
     ORIGIN_HOSTNAME = ""
   }
