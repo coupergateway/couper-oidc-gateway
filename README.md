@@ -19,6 +19,7 @@ You need to register a **confidential** client at the OpenID Provider with the r
 | `OIDC_CLIENT_SECRET` | string | The client secret | - |
 | `TOKEN_SECRET` | string | The secret used for signing the access token (the signature algorithm is `HS256`) | `$e(rE4` |
 | `TOKEN_TTL` | duration | The time-to-live of the access token | `2h` |
+| `TOKEN_COOKIE_NAME` | string | The name of the cookie storing the access token | `_couper_access_token` |
 | `ORIGIN` | string | The origin of the service to be protected | `https://www.example.com` |
 | `ORIGIN_HOSTNAME` | string | The value of the HTTP host header field for the request to the protected service | - |
 
@@ -37,5 +38,5 @@ The following cookies are involved:
 
 | Name | Description |
 | :--- | :---------- |
-| `access_token` | The token providing access to the protected service |
+| access token | The token providing access to the protected service, its name is configurable via `TOKEN_COOKIE_NAME` |
 | `authvv` | A verifier used for CSRF protection during the login process |

@@ -37,7 +37,7 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "access_token=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
+          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
           "authvv=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
         location = relative_url(request.query.state[0])
@@ -59,7 +59,7 @@ definitions {
     signature_algorithm = "HS256"
     key = env.TOKEN_SECRET
     signing_ttl = env.TOKEN_TTL
-    cookie = "access_token"
+    cookie = env.TOKEN_COOKIE_NAME
 
     error_handler {
       response {
@@ -94,6 +94,7 @@ defaults {
     OIDC_CONFIGURATION_URL = ""
     TOKEN_SECRET = "asdf"
     TOKEN_TTL = "2m"
+    TOKEN_COOKIE_NAME = "_couper_access_token"
     ORIGIN = ""
     ORIGIN_HOSTNAME = ""
   }
