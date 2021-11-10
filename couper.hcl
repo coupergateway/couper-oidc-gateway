@@ -93,7 +93,7 @@ defaults {
     OIDC_CLIENT_SECRET = ""
     OIDC_CONFIGURATION_URL = ""
     TOKEN_SECRET = "asdf"
-    TOKEN_TTL = "2m"
+    TOKEN_TTL = "1h"
     TOKEN_COOKIE_NAME = "_couper_access_token"
     ORIGIN = ""
     ORIGIN_HOSTNAME = ""
