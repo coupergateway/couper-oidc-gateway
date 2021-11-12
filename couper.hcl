@@ -75,7 +75,8 @@ location.href = "/oidc/start?url=${url_encode(relative_url(request.url))}"
 </script>
 <meta http-equiv="refresh" content="0;url=/oidc/start?url=${url_encode(relative_url(request.url))}"
 </head><body>
-<a href="/oidc/start?url=${url_encode(relative_url(request.url))}">please log-in!</a>
+<p><a href="/oidc/start?url=${url_encode(relative_url(request.url))}">please log-in!</a></p>
+<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway">Couper OIDC Gateway</a></p>
 </body></html>
 EOB
       }
