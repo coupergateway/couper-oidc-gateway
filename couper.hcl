@@ -70,13 +70,11 @@ definitions {
         }
         body = <<-EOB
 <!DOCTYPE html><html><head>
-<script>
-location.href = "/oidc/start?url=${url_encode(relative_url(request.url))}"
-</script>
+<script>location.href = "/oidc/start?url=${url_encode(relative_url(request.url))}"</script>
 <meta http-equiv="refresh" content="0;url=/oidc/start?url=${url_encode(relative_url(request.url))}"
-</head><body>
-<p><a href="/oidc/start?url=${url_encode(relative_url(request.url))}">please log-in!</a></p>
-<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway">Couper OIDC Gateway</a></p>
+</head><body><h1>Authentication required</h1>
+<p><a href="/oidc/start?url=${url_encode(relative_url(request.url))}">Proceed to login</a></p>
+<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
 </body></html>
 EOB
       }
