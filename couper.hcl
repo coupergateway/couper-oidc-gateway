@@ -16,6 +16,18 @@ server "oidc-gate" {
     }
   }
 
+  // OIDC start login
+  endpoint "/oidc/start" {
+    response {
+      status = 303
+      headers = {
+        cache-control = "no-cache,no-store"
+        location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
+        set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
+      }
+    }
+  }
+
   // OIDC login callback
   endpoint "/oidc/callback" {
     access_control = ["oidc"]
@@ -51,12 +63,20 @@ definitions {
 
     error_handler {
       response {
-        status = 303
+        status = 403
         headers = {
           cache-control = "no-cache,no-store"
-          location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.url))}"
-          set-cookie = "authvv=${beta_oauth_verifier()};HttpOnly;Secure;Path=/oidc/callback"
+          content-type = "text/html"
         }
+        body = <<-EOB
+<!DOCTYPE html><html><head>
+<script>location.href = "/oidc/start?url=${url_encode(relative_url(request.url))}"</script>
+<meta http-equiv="refresh" content="0;url=/oidc/start?url=${url_encode(relative_url(request.url))}"
+</head><body><h1>Authentication required</h1>
+<p><a href="/oidc/start?url=${url_encode(relative_url(request.url))}">Proceed to login</a></p>
+<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
+</body></html>
+EOB
       }
     }
   }
