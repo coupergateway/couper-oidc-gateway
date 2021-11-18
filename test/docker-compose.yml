@@ -1,0 +1,15 @@
+version: '3'
+services:
+  couper-oidc-gateway:
+    # build: ..
+    image: avenga/couper:edge
+    volumes:
+      - ../couper.hcl:/conf/couper.hcl
+    ports:
+    - 8080:8080
+    env_file:
+      - test.env
+    environment:
+      - COUPER_WATCH=true
+      - ORIGIN=https://couper.io
+      - ORIGIN_HOSTNAME=couper.io
