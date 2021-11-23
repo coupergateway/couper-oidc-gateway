@@ -1,0 +1,7 @@
+{
+  "issuer": "http://host.docker.internal:8081",
+  "authorization_endpoint": "http://host.docker.internal:8081/auth",
+  "token_endpoint": "http://host.docker.internal:8081/token",
+  "userinfo_endpoint": "http://host.docker.internal:8081/userinfo",
+  "code_challenge_methods_supported": ["S256"]
+}
