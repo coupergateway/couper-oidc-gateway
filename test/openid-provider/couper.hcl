@@ -20,15 +20,11 @@ server "oauth-as" {
         json_body = {
           access_token = jwt_sign("token", {
             aud = "http://host.docker.internal:8081"
-#            cid = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
-#            workaround:
-            cid = request.headers.authorization != null ? index(split(":", base64_decode(substr(request.headers.authorization, 6, 0 - 1))), 0) : request.form_body.client_id[0]
+            cid = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
             sub = "john"
           })
           id_token = jwt_sign("token", {
-#            aud = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
-#            workaround:
-            aud = request.headers.authorization != null ? index(split(":", base64_decode(substr(request.headers.authorization, 6, 0 - 1))), 0) : request.form_body.client_id[0]
+            aud = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
             sub = "john"
           })
           token_type = "Bearer"
