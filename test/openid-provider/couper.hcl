@@ -8,7 +8,8 @@ server "oauth-as" {
         status = 303
         headers = {
           cache-control = "no-cache, no-store"
-          location = "${request.query.redirect_uri[0]}?code=asdf${request.query.state != null ? "&state=${url_encode(request.query.state[0])}" : ""}"
+          # fake: use nonce as code to use it later at token endpoint
+          location = "${request.query.redirect_uri[0]}?code=${default(request.query.nonce[0], "asdf")}${request.query.state != null ? "&state=${url_encode(request.query.state[0])}" : ""}"
         }
       }
     }
@@ -26,6 +27,8 @@ server "oauth-as" {
           id_token = jwt_sign("token", {
             aud = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
             sub = "john"
+            # fake: set code as nonce, if not default code value
+            nonce = request.form_body.code[0] == "asdf" ? null : request.form_body.code[0]
           })
           token_type = "Bearer"
           expires_in = 3600
