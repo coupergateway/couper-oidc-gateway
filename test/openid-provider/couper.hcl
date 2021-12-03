@@ -51,18 +51,20 @@ server "oauth-as" {
 
 definitions {
   jwt_signing_profile "token" {
-    signature_algorithm = "HS256"
+    signature_algorithm = "RS256"
     ttl = "1h"
-    key = "asdf"
+    key_file = "pkcs8.key"
     claims = {
       iss = "http://host.docker.internal:8081"
       iat = unixtime()
     }
+    headers = {
+      kid = "rs256"
+    }
   }
 
   jwt "token" {
-    signature_algorithm = "HS256"
-    key = "asdf"
+    jwks_url = "http://host.docker.internal:8081/jwks.json"
     header = "authorization"
     required_claims = ["iat", "exp"]
     claims = {
