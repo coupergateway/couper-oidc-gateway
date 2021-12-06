@@ -18,9 +18,7 @@ services:
   test-openid-provider:
     image: avenga/couper:edge
     volumes:
-      - ./openid-provider/couper.hcl:/conf/couper.hcl
-      - ./openid-provider/pkcs8.key:/conf/pkcs8.key
-      - ./openid-provider/htdocs:/conf/htdocs
+      - ./openid-provider:/conf
     ports:
     - 8081:8080
     environment:
