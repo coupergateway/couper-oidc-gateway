@@ -17,6 +17,7 @@ services:
       - ORIGIN_HOSTNAME=couper.io
   test-openid-provider:
     image: avenga/couper:edge
+    hostname: testop
     volumes:
       - ./openid-provider:/conf
     ports:
