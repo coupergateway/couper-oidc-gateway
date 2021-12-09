@@ -14,6 +14,9 @@ server "oidc-gate" {
         hostname = env.ORIGIN_HOSTNAME != "" ? env.ORIGIN_HOSTNAME : request.host
       }
     }
+    add_response_headers = {
+      cache-control = "private"
+    }
   }
 
   // OIDC start login
