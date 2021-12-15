@@ -12,6 +12,9 @@ server "oidc-gate" {
       backend {
         origin = env.ORIGIN
         hostname = env.ORIGIN_HOSTNAME != "" ? env.ORIGIN_HOSTNAME : request.host
+        connect_timeout = env.CONNECT_TIMEOUT
+        ttfb_timeout = env.TTFB_TIMEOUT
+        timeout = env.TIMEOUT
       }
     }
     add_response_headers = {
@@ -101,5 +104,8 @@ defaults {
     VERIFIER_COOKIE_NAME = "_couper_authvv"
     ORIGIN = ""
     ORIGIN_HOSTNAME = ""
+    CONNECT_TIMEOUT = "10s"
+    TTFB_TIMEOUT = "60s"
+    TIMEOUT = "300s"
   }
 }
