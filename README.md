@@ -23,6 +23,9 @@ You need to register a **confidential** client at the OpenID Provider with the r
 | `VERIFIER_COOKIE_NAME` | string | `_couper_authvv` | The name of the cookie storing the verifier used for CSRF protection during the login process | `_couper_authvv` |
 | `ORIGIN` | string | - | The origin of the service to be protected | `https://www.example.com` |
 | `ORIGIN_HOSTNAME` | string | - | The value of the HTTP host header field for the request to the protected service | - |
+| `CONNECT_TIMEOUT` | duration | `10s` | The total timeout for dialing and connect to the origin | - |
+| `TTFB_TIMEOUT` | duration | `60s` | The duration from writing the full request to the origin and receiving the answer | - |
+| `TIMEOUT` | duration | `300s` | The total deadline duration a backend request has for write and read/pipe | - |
 
 | Duration units | Description  |
 | :------------- | :----------- |
