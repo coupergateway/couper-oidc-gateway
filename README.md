@@ -2,6 +2,8 @@
 
 A ready to use [Couper](https://github.com/avenga/couper) image to spin up an OpenID Connect gateway.
 
+`docker pull avenga/couper-oidc-gateway`
+
 _coming soon_
 
 The gateway uses the Authorization Code Grant Flow to connect to an OpenID Provider.
