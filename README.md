@@ -28,6 +28,7 @@ You need to register a **confidential** client at the OpenID Provider with the r
 | `CONNECT_TIMEOUT` | duration | `10s` | The total timeout for dialing and connect to the origin | - |
 | `TTFB_TIMEOUT` | duration | `60s` | The duration from writing the full request to the origin and receiving the answer | - |
 | `TIMEOUT` | duration | `300s` | The total deadline duration a backend request has for write and read/pipe | - |
+| `DISABLE_CERTIFICATE_VALIDATION` | bool | `false` | Disables the peer certificate validation for the protected service | - |
 
 | Duration units | Description  |
 | :------------- | :----------- |

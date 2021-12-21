@@ -15,6 +15,7 @@ server "oidc-gate" {
         connect_timeout = env.CONNECT_TIMEOUT
         ttfb_timeout = env.TTFB_TIMEOUT
         timeout = env.TIMEOUT
+        disable_certificate_validation = env.DISABLE_CERTIFICATE_VALIDATION
       }
     }
     add_response_headers = {
@@ -107,5 +108,6 @@ defaults {
     CONNECT_TIMEOUT = "10s"
     TTFB_TIMEOUT = "60s"
     TIMEOUT = "300s"
+    DISABLE_CERTIFICATE_VALIDATION = false
   }
 }
