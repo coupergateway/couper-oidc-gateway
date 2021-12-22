@@ -23,12 +23,12 @@ You need to register a **confidential** client at the OpenID Provider with the r
 | `TOKEN_TTL` | duration | `1h` | The time-to-live of the access token | `1h` |
 | `TOKEN_COOKIE_NAME` | string | `_couper_access_token` | The name of the cookie storing the access token | `_couper_access_token` |
 | `VERIFIER_COOKIE_NAME` | string | `_couper_authvv` | The name of the cookie storing the verifier used for CSRF protection during the login process | `_couper_authvv` |
-| `ORIGIN` | string | - | The origin of the service to be protected | `https://www.example.com` |
-| `ORIGIN_HOSTNAME` | string | - | The value of the HTTP host header field for the request to the protected service | - |
-| `CONNECT_TIMEOUT` | duration | `10s` | The total timeout for dialing and connect to the origin | - |
-| `TTFB_TIMEOUT` | duration | `60s` | The duration from writing the full request to the origin and receiving the answer | - |
-| `TIMEOUT` | duration | `300s` | The total deadline duration a backend request has for write and read/pipe | - |
-| `DISABLE_CERTIFICATE_VALIDATION` | bool | `false` | Disables the peer certificate validation for the protected service | - |
+| `BACKEND_ORIGIN` | string | - | The origin of the service to be protected | `https://www.example.com` |
+| `BACKEND_HOSTNAME` | string | - | The value of the HTTP host header field for the request to the protected service | - |
+| `BACKEND_CONNECT_TIMEOUT` | duration | `10s` | The total timeout for dialing and connect to the origin | - |
+| `BACKEND_TTFB_TIMEOUT` | duration | `60s` | The duration from writing the full request to the origin and receiving the answer | - |
+| `BACKEND_TIMEOUT` | duration | `300s` | The total deadline duration a backend request has for write and read/pipe | - |
+| `BACKEND_DISABLE_CERTIFICATE_VALIDATION` | bool | `false` | Disables the peer certificate validation for the protected service | - |
 
 | Duration units | Description  |
 | :------------- | :----------- |

@@ -10,12 +10,12 @@ server "oidc-gate" {
         authorization = request.headers.authorization
       }
       backend {
-        origin = env.ORIGIN
-        hostname = env.ORIGIN_HOSTNAME != "" ? env.ORIGIN_HOSTNAME : request.host
-        connect_timeout = env.CONNECT_TIMEOUT
-        ttfb_timeout = env.TTFB_TIMEOUT
-        timeout = env.TIMEOUT
-        disable_certificate_validation = env.DISABLE_CERTIFICATE_VALIDATION
+        origin = env.BACKEND_ORIGIN
+        hostname = env.BACKEND_HOSTNAME != "" ? env.BACKEND_HOSTNAME : request.host
+        connect_timeout = env.BACKEND_CONNECT_TIMEOUT
+        ttfb_timeout = env.BACKEND_TTFB_TIMEOUT
+        timeout = env.BACKEND_TIMEOUT
+        disable_certificate_validation = env.BACKEND_DISABLE_CERTIFICATE_VALIDATION
       }
     }
     add_response_headers = {
@@ -103,11 +103,11 @@ defaults {
     TOKEN_TTL = "1h"
     TOKEN_COOKIE_NAME = "_couper_access_token"
     VERIFIER_COOKIE_NAME = "_couper_authvv"
-    ORIGIN = ""
-    ORIGIN_HOSTNAME = ""
-    CONNECT_TIMEOUT = "10s"
-    TTFB_TIMEOUT = "60s"
-    TIMEOUT = "300s"
-    DISABLE_CERTIFICATE_VALIDATION = false
+    BACKEND_ORIGIN = ""
+    BACKEND_HOSTNAME = ""
+    BACKEND_CONNECT_TIMEOUT = "10s"
+    BACKEND_TTFB_TIMEOUT = "60s"
+    BACKEND_TIMEOUT = "300s"
+    BACKEND_DISABLE_CERTIFICATE_VALIDATION = false
   }
 }
