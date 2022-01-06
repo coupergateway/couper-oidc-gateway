@@ -13,8 +13,8 @@ services:
       - test.env
     environment:
       - COUPER_WATCH=true
-      - ORIGIN=https://couper.io
-      - ORIGIN_HOSTNAME=couper.io
+      - BACKEND_ORIGIN=https://couper.io
+      - BACKEND_HOSTNAME=couper.io
       - OIDC_CONFIGURATION_URL=http://testop:8080/.well-known/openid-configuration
       - OIDC_CLIENT_ID=foo
       - OIDC_CLIENT_SECRET=bar
