@@ -2,7 +2,7 @@ version: '3'
 services:
   couper-oidc-gateway:
     # build: ..
-    image: avenga/couper:1.6.0
+    image: avenga/couper:1.7.0
     volumes:
       - ../couper.hcl:/conf/couper.hcl
     ports:
