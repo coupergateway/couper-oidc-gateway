@@ -29,8 +29,8 @@ server "oidc-gate" {
       status = 303
       headers = {
         cache-control = "no-cache,no-store"
-        location = "${beta_oauth_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
-        set-cookie = "${env.VERIFIER_COOKIE_NAME}=${beta_oauth_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
+        location = "${oauth2_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
+        set-cookie = "${env.VERIFIER_COOKIE_NAME}=${oauth2_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
       }
     }
   }
@@ -54,7 +54,7 @@ server "oidc-gate" {
 }
 
 definitions {
-  beta_oidc "oidc" {
+  oidc "oidc" {
     configuration_url = env.OIDC_CONFIGURATION_URL
     client_id = env.OIDC_CLIENT_ID
     client_secret = env.OIDC_CLIENT_SECRET
