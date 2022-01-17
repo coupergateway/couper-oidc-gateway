@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/chromedp/cdproto/network"
@@ -58,7 +59,11 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 	// register event listener
 	var resultEvents []item
+	rmu := sync.Mutex{}
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
+		rmu.Lock()
+		defer rmu.Unlock()
+
 		switch event := ev.(type) {
 		case *network.EventResponseReceivedExtraInfo:
 			resultEvents = append(resultEvents, item{
@@ -128,6 +133,9 @@ func TestOpenIDConnectFlow(t *testing.T) {
 	); err != nil {
 		t.Fatal(err)
 	}
+
+	rmu.Lock()
+	defer rmu.Unlock()
 
 	// just differ first events
 	for i, e := range expectedEvents {
