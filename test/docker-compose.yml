@@ -1,16 +1,13 @@
 version: '3'
 services:
   couper-oidc-gateway:
-    # build: ..
-    image: avenga/couper:1.7.0
+    image: avenga/couper:1.7
     volumes:
       - ../couper.hcl:/conf/couper.hcl
     ports:
-    - 8080:8080
+    - "8080:8080"
     depends_on:
       - test-openid-provider
-    env_file:
-      - test.env
     environment:
       - COUPER_WATCH=true
       - BACKEND_ORIGIN=https://couper.io
@@ -24,6 +21,6 @@ services:
     volumes:
       - ./openid-provider:/conf
     ports:
-    - 8081:8080
+    - "8081:8080"
     environment:
       - COUPER_WATCH=true

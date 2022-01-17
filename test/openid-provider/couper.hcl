@@ -7,7 +7,7 @@ server "oauth-as" {
       response {
         status = 303
         headers = {
-          cache-control = "no-cache, no-store"
+          cache-control = "no-cache,no-store"
           # fake: use nonce as code to use it later at token endpoint
           location = "${request.query.redirect_uri[0]}?code=${default(request.query.nonce[0], "asdf")}${request.query.state != null ? "&state=${url_encode(request.query.state[0])}" : ""}"
         }
@@ -16,7 +16,7 @@ server "oauth-as" {
     endpoint "/token" {
       response {
         headers = {
-          cache-control = "no-cache, no-store"
+          cache-control = "no-cache,no-store"
         }
         json_body = {
           access_token = jwt_sign("token", {
@@ -39,7 +39,7 @@ server "oauth-as" {
       access_control = ["token"]
       response {
         headers = {
-          cache-control = "no-cache, no-store"
+          cache-control = "no-cache,no-store"
         }
         json_body = {
           sub = request.context.token.sub
