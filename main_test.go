@@ -7,13 +7,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"reflect"
 	"strings"
 	"sync"
 	"testing"
 
+	"github.com/chromedp/cdproto/fetch"
 	"github.com/chromedp/cdproto/network"
-	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 )
 
@@ -24,75 +23,67 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 	url := "http://localhost:8080/"
 
-	type item struct {
-		url        string
-		statusCode int64
-		headers    network.Headers
-		event      string
-	}
-
-	expectedEvents := []item{
-		{url, 0, nil, reflect.TypeOf(&network.EventRequestWillBeSent{}).String()},
-		{"", http.StatusForbidden, nil, reflect.TypeOf(&network.EventResponseReceivedExtraInfo{}).String()},
-		{url, http.StatusForbidden, nil, reflect.TypeOf(&network.EventResponseReceived{}).String()},
-		{"scriptInitiated: " + url + "_couper/oidc/start?url=%2F", 0, nil, reflect.TypeOf(&page.EventFrameRequestedNavigation{}).String()},
-		{url + "_couper/oidc/start?url=%2F", 0, nil, reflect.TypeOf(&network.EventRequestWillBeSent{}).String()},
-		{"", http.StatusSeeOther, network.Headers{
-			"Cache-Control": "no-cache,no-store",
-			"Location":      "http://localhost:8081/auth?client_id=foo&code_challenge=",
-			"Set-Cookie":    "_couper_authvv="},
-			reflect.TypeOf(&network.EventResponseReceivedExtraInfo{}).String()},
-		{"http://localhost:8081/auth?client_id=foo&code_challenge=", 0, nil, reflect.TypeOf(&network.EventRequestWillBeSent{}).String()},
-		{"", http.StatusSeeOther, network.Headers{
-			"Cache-Control": "no-cache,no-store",
-			"Location":      url + "_couper/oidc/callback?code=asdf&state=%2F",
-		}, reflect.TypeOf(&network.EventResponseReceivedExtraInfo{}).String()},
-		{url + "_couper/oidc/callback?code=asdf&state=%2F", 0, nil, reflect.TypeOf(&network.EventRequestWillBeSent{}).String()},
-		{"", http.StatusSeeOther, network.Headers{
-			"Cache-Control": "no-cache,no-store",
-			"Set-Cookie":    "_couper_access_token=ey",
-		}, reflect.TypeOf(&network.EventResponseReceivedExtraInfo{}).String()},
-		{url, 0, nil, reflect.TypeOf(&network.EventRequestWillBeSent{}).String()},
-		{"", http.StatusOK, nil, reflect.TypeOf(&network.EventResponseReceivedExtraInfo{}).String()},
-		{url, http.StatusOK, nil, reflect.TypeOf(&network.EventResponseReceived{}).String()},
+	expectedEvents := []testEvent{
+		{url: url, statusCode: http.StatusForbidden, headers: nil},
+		{url: url + "_couper/oidc/start?url=%2F", statusCode: http.StatusSeeOther,
+			headers: network.Headers{
+				"Cache-Control": "no-cache,no-store",
+				"Location":      "http://localhost:8081/auth?client_id=foo&code_challenge=",
+				"Set-Cookie":    "_couper_authvv="},
+		},
+		{url: "http://localhost:8081/auth?client_id=foo&code_challenge=", statusCode: http.StatusSeeOther,
+			headers: network.Headers{
+				"Cache-Control": "no-cache,no-store",
+				"Location":      url + "_couper/oidc/callback?code=asdf&state=%2F",
+			},
+		},
+		{url: url + "_couper/oidc/callback?code=asdf&state=%2F", statusCode: http.StatusSeeOther,
+			headers: network.Headers{
+				"Cache-Control": "no-cache,no-store",
+				"Set-Cookie":    "_couper_access_token=ey",
+			}},
+		{url: url, statusCode: http.StatusOK, headers: nil},
 	}
 
 	// register event listener
-	var resultEvents []item
+	var testEvents []*testEvent
 	rmu := sync.Mutex{}
+	ctnr := 0
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
-		rmu.Lock()
-		defer rmu.Unlock()
-
 		switch event := ev.(type) {
+		case *fetch.EventRequestPaused:
+			// catch outgoing reqs and register them by ID and order
+			go func(c context.Context, e *fetch.EventRequestPaused) {
+				rmu.Lock()
+				defer rmu.Unlock()
+
+				action := fetch.ContinueRequest(e.RequestID)
+
+				testEvents = append(testEvents, &testEvent{
+					url: e.Request.URL,
+				})
+
+				rc, clfn := context.WithCancel(ctx)
+				defer clfn()
+
+				if err := chromedp.Run(rc, action); err != nil {
+					t.Error(err)
+				}
+				ctnr++
+			}(ctx, event)
 		case *network.EventResponseReceivedExtraInfo:
-			resultEvents = append(resultEvents, item{
-				statusCode: event.StatusCode,
-				headers:    event.Headers,
-				event:      reflect.TypeOf(event).String(),
-			})
-		case *network.EventResponseReceived:
-			resultEvents = append(resultEvents, item{
-				url:        event.Response.URL,
-				statusCode: event.Response.Status,
-				headers:    event.Response.Headers,
-				event:      reflect.TypeOf(event).String(),
-			})
-		case *network.EventRequestWillBeSent:
-			resultEvents = append(resultEvents, item{
-				url:   event.Request.URL,
-				event: reflect.TypeOf(event).String(),
-			})
-		case *page.EventFrameRequestedNavigation:
-			resultEvents = append(resultEvents, item{
-				url:   fmt.Sprintf("%s: %s", event.Reason, event.URL),
-				event: reflect.TypeOf(event).String(),
-			})
+			rmu.Lock()
+			defer rmu.Unlock()
+
+			testEvents[ctnr-1].statusCode = event.StatusCode
+			testEvents[ctnr-1].headers = event.Headers
 		}
 	})
 
 	// run chrome tab, clear cookies and navigate to url, verify cookie set
 	if err := chromedp.Run(ctx,
+		network.Enable(),
+		fetch.Enable(),
 		network.DeleteCookies("_couper_access_token").WithURL(url), // TOKEN_COOKIE_NAME
 		network.DeleteCookies("_couper_authvv").WithDomain(url),    // VERIFIER_COOKIE_NAME
 		chromedp.ActionFunc(func(c context.Context) error {
@@ -139,7 +130,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 	// just differ first events
 	for i, e := range expectedEvents {
-		r := resultEvents[i]
+		r := testEvents[i]
 
 		headers := true
 
@@ -152,18 +143,18 @@ func TestOpenIDConnectFlow(t *testing.T) {
 			}
 		}
 
-		if r.statusCode != e.statusCode || r.event != e.event ||
-			!strings.HasPrefix(r.url, e.url) || !headers {
-			t.Fatalf("event #%02d:\nwant: %#v\ngot:  %#v\n", i+1, e, resultEvents[i])
+		if r.statusCode != e.statusCode ||
+			!strings.HasPrefix(r.url, e.url) ||
+			!headers {
+			t.Fatalf("event #%02d:\nwant: %#v\ngot:  %#v\n", i+1, e, r)
 		}
 
-		if r.url != "" { // just logging for ci
-			if r.statusCode != 0 { // response events
-				t.Logf("event: %q, url: %q, status: %d", r.event, r.url, r.statusCode)
-			} else {
-				t.Logf("event: %q, url: %q", r.event, r.url)
-			}
-		}
+		t.Logf("url: %q, status: %d", r.url, r.statusCode)
 	}
+}
 
+type testEvent struct {
+	url        string
+	statusCode int64
+	headers    network.Headers
 }
