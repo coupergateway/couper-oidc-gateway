@@ -108,7 +108,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 				cc := chromedp.FromContext(c)
 				ec := cdp.WithExecutor(ctx, cc.Target)
 
-				if err := fetch.ContinueRequest(e.RequestID).Do(ec); err != nil {
+				if err := fetch.ContinueRequest(e.RequestID).Do(ec); err != nil && err != context.Canceled {
 					t.Error(err)
 				}
 			}(ctx, event)
