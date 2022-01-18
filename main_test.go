@@ -127,8 +127,8 @@ func TestOpenIDConnectFlow(t *testing.T) {
 	if err := chromedp.Run(ctx,
 		network.Enable(),
 		fetch.Enable(),
-		network.DeleteCookies("_couper_access_token").WithURL(url),             // TOKEN_COOKIE_NAME
-		network.DeleteCookies("_couper_authvv").WithURL("http://testop:8080/"), // VERIFIER_COOKIE_NAME
+		network.DeleteCookies("_couper_access_token").WithURL(url), // TOKEN_COOKIE_NAME
+		network.DeleteCookies("_couper_authvv").WithURL(url),       // VERIFIER_COOKIE_NAME
 		chromedp.ActionFunc(func(c context.Context) error {
 			cookies, err := network.GetAllCookies().Do(c)
 			if err != nil {
