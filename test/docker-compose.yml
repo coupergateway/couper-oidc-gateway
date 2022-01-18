@@ -14,7 +14,7 @@ services:
       - OIDC_CONFIGURATION_URL=http://testop:8080/.well-known/openid-configuration
       - OIDC_CLIENT_ID=foo
       - OIDC_CLIENT_SECRET=bar
-      - COOKIE_OPTS= # remove Secure;
+      - COUPER_SECURE_COOKIES=strip
   test-openid-provider:
     image: avenga/couper:edge
     hostname: testop
