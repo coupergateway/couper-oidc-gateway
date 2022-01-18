@@ -123,12 +123,15 @@ func TestOpenIDConnectFlow(t *testing.T) {
 		}
 	})
 
+	const tokenName = "_couper_access_token"
+	const verifierName = "_couper_authvv"
+
 	// run chrome tab, clear cookies and navigate to url, verify cookie set
 	if err := chromedp.Run(ctx,
 		network.Enable(),
 		fetch.Enable(),
-		network.DeleteCookies("_couper_access_token").WithURL(url), // TOKEN_COOKIE_NAME
-		network.DeleteCookies("_couper_authvv").WithURL(url),       // VERIFIER_COOKIE_NAME
+		network.DeleteCookies(tokenName).WithURL(url),                            // TOKEN_COOKIE_NAME
+		network.DeleteCookies(verifierName).WithURL(url+"_couper/oidc/callback"), // VERIFIER_COOKIE_NAME
 		chromedp.ActionFunc(func(c context.Context) error {
 			cookies, err := network.GetAllCookies().Do(c)
 			if err != nil {
@@ -137,7 +140,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 			if len(cookies) > 0 {
 				for _, cookie := range cookies {
-					if cookie.Name == "_couper_access_token" || cookie.Name == "_couper_authvv" {
+					if cookie.Name == tokenName || cookie.Name == verifierName {
 						t.Log(cookie.Name, cookie.Value)
 						return fmt.Errorf("expected cleared _couper cookies")
 					}
@@ -148,22 +151,38 @@ func TestOpenIDConnectFlow(t *testing.T) {
 		}),
 		chromedp.Navigate(url+"en/docs/?foo=oidc-test"),
 		chromedp.ActionFunc(func(c context.Context) error {
-			cookies, err := network.GetCookies().
-				WithUrls([]string{url}).Do(c)
+			cookies, err := network.GetAllCookies().Do(c)
 			if err != nil {
 				return err
 			}
 
+			var acTokenSeen, verifierSeen bool
+
 			for _, cookie := range cookies {
-				if cookie.Name == "_couper_access_token" {
+				if cookie.Name == tokenName {
 					r := base64.NewDecoder(base64.StdEncoding, strings.NewReader(cookie.Value))
 					tokenBytes, _ := ioutil.ReadAll(r)
 					token := map[string]interface{}{}
-					return json.Unmarshal(tokenBytes, &token)
+					if err = json.Unmarshal(tokenBytes, &token); err != nil { // valid json?
+						return err
+					}
+					acTokenSeen = true
+				}
+
+				if cookie.Name == verifierName {
+					verifierSeen = true
 				}
 			}
 
-			return fmt.Errorf("expected cookie with couper access token")
+			if !acTokenSeen {
+				return fmt.Errorf("expected cookie: %q", tokenName)
+			}
+
+			if verifierSeen {
+				return fmt.Errorf("unexpected cookie: %q", verifierName)
+			}
+
+			return nil
 		}),
 	); err != nil {
 		t.Fatal(err)
