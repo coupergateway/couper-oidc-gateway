@@ -44,7 +44,7 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})};HttpOnly;Secure;Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
+          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})};HttpOnly;Secure;Path=/",
           "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
         location = relative_url(request.query.state[0])
