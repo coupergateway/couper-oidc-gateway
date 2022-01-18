@@ -48,7 +48,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 	// register event listener
 	var testEvents []*testEvent
 	rmu := sync.Mutex{}
-	ctnr := 0
+
 	chromedp.ListenTarget(ctx, func(ev interface{}) {
 		switch event := ev.(type) {
 		case *fetch.EventRequestPaused:
@@ -69,14 +69,15 @@ func TestOpenIDConnectFlow(t *testing.T) {
 				if err := chromedp.Run(rc, action); err != nil {
 					t.Error(err)
 				}
-				ctnr++
 			}(ctx, event)
 		case *network.EventResponseReceivedExtraInfo:
 			rmu.Lock()
 			defer rmu.Unlock()
 
-			testEvents[ctnr-1].statusCode = event.StatusCode
-			testEvents[ctnr-1].headers = event.Headers
+			i := len(testEvents) - 1
+
+			testEvents[i].statusCode = event.StatusCode
+			testEvents[i].headers = event.Headers
 		}
 	})
 
