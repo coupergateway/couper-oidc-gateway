@@ -146,7 +146,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 			return nil
 		}),
-		chromedp.Navigate(url),
+		chromedp.Navigate(url+"en/docs/?foo=oidc-test"),
 		chromedp.ActionFunc(func(c context.Context) error {
 			cookies, err := network.GetCookies().
 				WithUrls([]string{url}).Do(c)
