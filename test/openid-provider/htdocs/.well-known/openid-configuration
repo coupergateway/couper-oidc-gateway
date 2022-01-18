@@ -1,6 +1,6 @@
 {
   "issuer": "http://testop:8080",
-  "authorization_endpoint": "http://localhost:8081/auth",
+  "authorization_endpoint": "http://testop:8080/auth",
   "token_endpoint": "http://testop:8080/token",
   "userinfo_endpoint": "http://testop:8080/userinfo",
   "jwks_uri": "http://testop:8080/jwks.json",

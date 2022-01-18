@@ -1,0 +1,31 @@
+name: 'chrome-test'
+
+on:
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+  schedule:
+    - cron: '0 9 * * 1-5' # mo-fr
+
+jobs:
+  docker:
+    name: 'chrome-test'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: 'setup docker'
+        uses: docker-practice/actions-setup-docker@1.0.8
+      - name: 'setup go'
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+      - name: 'setup go dep'
+        run: go mod download
+      - name: 'test with avenga/couper'
+        run: |
+          docker version
+          go test -v -race -timeout 30s main_test.go
