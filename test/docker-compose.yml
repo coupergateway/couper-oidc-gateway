@@ -2,10 +2,9 @@ version: '3'
 services:
   couper-oidc-gateway:
     image: avenga/couper:1.7
+    hostname: couper
     volumes:
       - ../couper.hcl:/conf/couper.hcl
-    ports:
-    - "8080:8080"
     depends_on:
       - test-openid-provider
     environment:
@@ -15,12 +14,15 @@ services:
       - OIDC_CONFIGURATION_URL=http://testop:8080/.well-known/openid-configuration
       - OIDC_CLIENT_ID=foo
       - OIDC_CLIENT_SECRET=bar
+      - COOKIE_OPTS= # remove Secure;
   test-openid-provider:
     image: avenga/couper:edge
     hostname: testop
     volumes:
       - ./openid-provider:/conf
-    ports:
-    - "8081:8080"
     environment:
       - COUPER_WATCH=true
+  headless-chrome:
+    image: chromedp/headless-shell
+    ports:
+      - "9222:9222"

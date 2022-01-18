@@ -30,7 +30,7 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         location = "${oauth2_authorization_url("oidc")}&state=${url_encode(relative_url(request.query.url[0]))}"
-        set-cookie = "${env.VERIFIER_COOKIE_NAME}=${oauth2_verifier()};HttpOnly;Secure;Path=/_couper/oidc/callback"
+        set-cookie = "${env.VERIFIER_COOKIE_NAME}=${oauth2_verifier()};HttpOnly;${env.COOKIE_OPTS}Path=/_couper/oidc/callback"
       }
     }
   }
@@ -44,8 +44,8 @@ server "oidc-gate" {
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})}; HttpOnly; Secure; Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
-          "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
+          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})};HttpOnly;${env.COOKIE_OPTS}Path=/", # cannot use Max-Age=${env.TOKEN_TTL} here as long as TOKEN_TTL is a duration, because an integer is expected for Max-Age
+          "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Path=/_couper/oidc/callback;Max-Age=0"
         ]
         location = relative_url(request.query.state[0])
       }
@@ -109,5 +109,8 @@ defaults {
     BACKEND_TTFB_TIMEOUT = "60s"
     BACKEND_TIMEOUT = "300s"
     BACKEND_DISABLE_CERTIFICATE_VALIDATION = false
+
+    # Testing
+    COOKIE_OPTS = "Secure;"
   }
 }
