@@ -69,7 +69,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 	expectedEvents := []testEvent{
 		{url: url + "en/docs/?foo=oidc-test", statusCode: http.StatusForbidden, headers: nil},
-		{url: url + "_couper/oidc/start?url=%2F", statusCode: http.StatusSeeOther,
+		{url: url + "_couper/oidc/start?url=%2Fen%2Fdocs%2F%3Ffoo%3Doidc-test", statusCode: http.StatusSeeOther,
 			headers: network.Headers{
 				"Cache-Control": "no-cache,no-store",
 				"Location":      "http://testop:8080/auth?client_id=foo&code_challenge=",
@@ -78,10 +78,10 @@ func TestOpenIDConnectFlow(t *testing.T) {
 		{url: "http://testop:8080/auth?client_id=foo&code_challenge=", statusCode: http.StatusSeeOther,
 			headers: network.Headers{
 				"Cache-Control": "no-cache,no-store",
-				"Location":      url + "_couper/oidc/callback?code=asdf&state=%2F",
+				"Location":      url + "_couper/oidc/callback?code=asdf&state=%2Fen%2Fdocs%2F%3Ffoo%3Doidc-test",
 			},
 		},
-		{url: url + "_couper/oidc/callback?code=asdf&state=%2F", statusCode: http.StatusSeeOther,
+		{url: url + "_couper/oidc/callback?code=asdf&state=%2Fen%2Fdocs%2F%3Ffoo%3Doidc-test", statusCode: http.StatusSeeOther,
 			headers: network.Headers{
 				"Cache-Control": "no-cache,no-store",
 				"Set-Cookie":    "_couper_access_token=ey",
@@ -190,7 +190,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 		if r.statusCode != e.statusCode ||
 			!strings.HasPrefix(r.url, e.url) ||
 			!headers {
-			t.Fatalf("event #%02d:\nwant: %#v\ngot:  %#v\n", i+1, e, r)
+			t.Fatalf("event #%02d:\nwant: %#v\ngot:  %#v\n", i+1, e, *r)
 		}
 
 		t.Logf("url: %q, status: %d", r.url, r.statusCode)
