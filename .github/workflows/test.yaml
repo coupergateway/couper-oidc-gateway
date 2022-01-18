@@ -21,6 +21,8 @@ jobs:
         uses: docker-practice/actions-setup-docker@1.0.8
       - name: 'setup go'
         uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
       - name: 'setup go dep'
         run: go mod download
       - name: 'test with avenga/couper'
