@@ -68,7 +68,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 	url := "http://couper:8080/"
 
 	expectedEvents := []testEvent{
-		{url: url, statusCode: http.StatusForbidden, headers: nil},
+		{url: url + "en/docs/?foo=oidc-test", statusCode: http.StatusForbidden, headers: nil},
 		{url: url + "_couper/oidc/start?url=%2F", statusCode: http.StatusSeeOther,
 			headers: network.Headers{
 				"Cache-Control": "no-cache,no-store",
@@ -86,7 +86,7 @@ func TestOpenIDConnectFlow(t *testing.T) {
 				"Cache-Control": "no-cache,no-store",
 				"Set-Cookie":    "_couper_access_token=ey",
 			}},
-		{url: url, statusCode: http.StatusOK, headers: nil},
+		{url: url + "en/docs/?foo=oidc-test", statusCode: http.StatusOK, headers: nil},
 	}
 
 	// register event listener
