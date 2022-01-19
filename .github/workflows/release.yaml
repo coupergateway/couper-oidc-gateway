@@ -4,11 +4,8 @@ on:
     branches: [ master ]
     types:
       - completed
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'git tag'
-        required: true
+  release:
+    types: [ released ]
 jobs:
   build:
     name: build container image
@@ -17,13 +14,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-        if: github.event_name != 'workflow_dispatch'
-
-      - name: checkout given tag
-        uses: actions/checkout@v2
-        if: github.event_name == 'workflow_dispatch'
-        with:
-          ref: ${{ github.event.inputs.tag }}
 
       - name: Docker meta
         id: meta
