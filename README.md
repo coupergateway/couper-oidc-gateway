@@ -1,6 +1,6 @@
 # Couper OIDC Gateway
 
-A ready to use [Couper](https://github.com/avenga/couper) image to spin up an OpenID Connect gateway.
+A ready-to-use [Docker image](https://hub.docker.com/r/avenga/couper-oidc-gateway) to spin up an OpenID Connect gateway using the [Couper API Gateway](https://github.com/avenga/couper):
 
 `docker pull avenga/couper-oidc-gateway`
 
