@@ -17,6 +17,7 @@ Set at least the following variables:
 * `OIDC_CONFIGURATION_URL`
 * `OIDC_CLIENT_ID`
 * `OIDC_CLIENT_SECRET`
+* `TOKEN_SECRET`
 * `BACKEND_ORIGIN`
 
 ## Environment Variables
