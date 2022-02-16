@@ -12,6 +12,14 @@ The redirect endpoint for the flow is `/_couper/oidc/callback`.
 
 You need to register a **confidential** client at the OpenID Provider with the redirect URI `https://<your-gateway-host>/_couper/oidc/callback`. During registration you get a client ID and a client secret.
 
+Set at least the following variables:
+
+* `OIDC_CONFIGURATION_URL`
+* `OIDC_CLIENT_ID`
+* `OIDC_CLIENT_SECRET`
+* `TOKEN_SECRET`
+* `BACKEND_ORIGIN`
+
 ## Environment Variables
 
 | Variable                                 | Type     | Default                | Description                                                                                   | Example                                        |
