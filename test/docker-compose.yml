@@ -1,7 +1,7 @@
 version: '3'
 services:
   couper-oidc-gateway:
-    image: avenga/couper:1.7
+    image: avenga/couper:1.8
     hostname: couper
     volumes:
       - ../couper.hcl:/conf/couper.hcl

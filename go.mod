@@ -1,10 +1,13 @@
 module github.com/avenga/couper-oidc-gateway
 
-go 1.17
+go 1.18
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20220113222801-0725d94bb6ee // indirect
-	github.com/chromedp/chromedp v0.7.6 // indirect
+	github.com/chromedp/cdproto v0.0.0-20220113222801-0725d94bb6ee
+	github.com/chromedp/chromedp v0.7.6
+)
+
+require (
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
