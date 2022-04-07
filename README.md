@@ -22,6 +22,10 @@ Set at least the following variables:
 
 ## Environment Variables
 
+> **Note**: Along with this container specific variables you can also configure the underlying Couper with its own
+> [environment variable options](https://github.com/avenga/couper/blob/master/DOCKER.md#environment-options).
+> For example you may have to use a custom ca-certificate with `COUPER_CA_FILE`.
+
 | Variable                                 | Type     | Default                | Description                                                                                   | Example                                        |
 |:-----------------------------------------|:---------|:-----------------------|:----------------------------------------------------------------------------------------------|:-----------------------------------------------|
 | `OIDC_CONFIGURATION_URL`                 | string   | -                      | The URL of the OpenID configuration at the OpenID Provider                                    | `https://.../.well-known/openid-configuration` |
