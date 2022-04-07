@@ -34,8 +34,8 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	log.Print("docker-compose stop ...")
-	cmd = exec.Command("docker-compose", "-f", "test/docker-compose.yml", "stop")
+	log.Print("docker-compose down ...")
+	cmd = exec.Command("docker-compose", "-f", "test/docker-compose.yml", "down")
 	cmd.Stdout = io.Discard
 	err = cmd.Run()
 	if err != nil {
