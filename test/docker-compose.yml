@@ -6,7 +6,7 @@ services:
     volumes:
       - ../couper.hcl:/conf/couper.hcl
     depends_on:
-      - test-openid-provider
+      - couper-test-openid-provider
     environment:
       - COUPER_WATCH=true
       - BACKEND_ORIGIN=https://couper.io
@@ -15,8 +15,8 @@ services:
       - OIDC_CLIENT_ID=foo
       - OIDC_CLIENT_SECRET=bar
       - COUPER_SECURE_COOKIES=strip
-  test-openid-provider:
-    image: avenga/couper:edge
+  couper-test-openid-provider:
+    image: avenga/couper:1.8
     hostname: testop
     volumes:
       - ./openid-provider:/conf

@@ -57,7 +57,14 @@ func TestOpenIDConnectFlow(t *testing.T) {
 
 	defer func() {
 		if t.Failed() {
-			t.Log("Chrome log output:\n")
+			names := []string{"test_couper-test-openid-provider_1", "test_couper-oidc-gateway_1"}
+			for _, name := range names {
+				logCmd := exec.Command("docker", "logs", name)
+				logCmd.Stdout = os.Stdout
+				t.Log("\n" + name + " log output:\n")
+				_ = logCmd.Run()
+			}
+			t.Log("\nChrome log output:\n")
 			println(chromeLog.String())
 		}
 	}()
