@@ -8,6 +8,7 @@ on:
   pull_request:
   schedule:
     - cron: '0 9 * * 1-5' # mo-fr
+  workflow_call:
 
 jobs:
   docker:
