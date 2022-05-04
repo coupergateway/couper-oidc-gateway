@@ -15,7 +15,7 @@ server "oidc-gate" {
         connect_timeout = env.BACKEND_CONNECT_TIMEOUT
         ttfb_timeout = env.BACKEND_TTFB_TIMEOUT
         timeout = env.BACKEND_TIMEOUT
-        disable_certificate_validation = env.BACKEND_DISABLE_CERTIFICATE_VALIDATION
+        disable_certificate_validation = env.BACKEND_DISABLE_CERTIFICATE_VALIDATION == "true"
       }
     }
     add_response_headers = {
@@ -108,7 +108,7 @@ defaults {
     BACKEND_CONNECT_TIMEOUT = "10s"
     BACKEND_TTFB_TIMEOUT = "60s"
     BACKEND_TIMEOUT = "300s"
-    BACKEND_DISABLE_CERTIFICATE_VALIDATION = false
+    BACKEND_DISABLE_CERTIFICATE_VALIDATION = "false"
     COUPER_SECURE_COOKIES="" # override in test
   }
 }
