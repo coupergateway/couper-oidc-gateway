@@ -40,15 +40,23 @@ server "oidc-gate" {
     access_control = ["oidc"]
 
     response {
-      status = 303
+      status = env.REQUIRED_EMAIL_DOMAIN == "" || split("@", request.context.oidc.id_token_claims.email)[1] == env.REQUIRED_EMAIL_DOMAIN ? 303 : 403
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "${env.TOKEN_COOKIE_NAME}=${jwt_sign("AccessToken", {})};HttpOnly;Secure;Path=/",
+          "${env.TOKEN_COOKIE_NAME}=${env.REQUIRED_EMAIL_DOMAIN == "" || split("@", request.context.oidc.id_token_claims.email)[1] == env.REQUIRED_EMAIL_DOMAIN ? jwt_sign("AccessToken", {}) : ""};HttpOnly;Secure;Path=/",
           "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
-        location = relative_url(request.query.state[0])
+        content-type = env.REQUIRED_EMAIL_DOMAIN == "" || split("@", request.context.oidc.id_token_claims.email)[1] == env.REQUIRED_EMAIL_DOMAIN ? "text/html" : ""
+        location = env.REQUIRED_EMAIL_DOMAIN == "" || split("@", request.context.oidc.id_token_claims.email)[1] == env.REQUIRED_EMAIL_DOMAIN ? relative_url(request.query.state[0]) : ""
       }
+      body = env.REQUIRED_EMAIL_DOMAIN == "" || split("@", request.context.oidc.id_token_claims.email)[1] == env.REQUIRED_EMAIL_DOMAIN ? "" : <<-EOF
+<!DOCTYPE html><html><head>
+<title>access control error</title>
+</head><body><h1>access control error</h1>
+<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
+</body></html>
+EOF
     }
   }
 }
@@ -60,6 +68,7 @@ definitions {
     client_secret = env.OIDC_CLIENT_SECRET
     redirect_uri = "/_couper/oidc/callback"
     verifier_value = request.cookies[env.VERIFIER_COOKIE_NAME]
+    scope = "email"
   }
 
   jwt "AccessToken" {
@@ -109,6 +118,7 @@ defaults {
     BACKEND_TTFB_TIMEOUT = "60s"
     BACKEND_TIMEOUT = "300s"
     BACKEND_DISABLE_CERTIFICATE_VALIDATION = "false"
+    REQUIRED_EMAIL_DOMAIN = ""
     COUPER_SECURE_COOKIES="" # override in test
   }
 }
