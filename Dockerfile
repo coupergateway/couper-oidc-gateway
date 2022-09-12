@@ -1,3 +1,4 @@
-FROM avenga/couper:1.8
-ENV VERSION 0.0.0
+ARG COUPER_VERSION=1.8
+FROM avenga/couper:$COUPER_VERSION
+
 COPY couper.hcl /conf/

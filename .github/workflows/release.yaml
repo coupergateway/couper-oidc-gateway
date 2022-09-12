@@ -3,6 +3,12 @@ name: 'release'
 on:
   release:
     types: [ published ]
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+        default: 'edge'
 jobs:
   test:
     uses: avenga/couper-oidc-gateway/.github/workflows/test.yaml@master
@@ -45,6 +51,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
           push: true
+          args: 'COUPER_VERSION=edge'
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
