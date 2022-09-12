@@ -69,6 +69,16 @@ definitions {
     redirect_uri = "/_couper/oidc/callback"
     verifier_value = request.cookies[env.VERIFIER_COOKIE_NAME]
     scope = "email"
+
+    error_handler {
+      set_response_headers = {
+        cache-control = "no-cache,no-store"
+        set-cookie = [
+          "${env.TOKEN_COOKIE_NAME}=;HttpOnly;Secure;Path=/",
+          "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
+        ]
+      }
+    }
   }
 
   jwt "AccessToken" {
