@@ -68,7 +68,7 @@ definitions {
     client_secret = env.OIDC_CLIENT_SECRET
     redirect_uri = "/_couper/oidc/callback"
     verifier_value = request.cookies[env.VERIFIER_COOKIE_NAME]
-    scope = "email"
+    scope = env.REQUIRED_EMAIL_DOMAIN == "" ? "" : "email"
 
     error_handler {
       set_response_headers = {
