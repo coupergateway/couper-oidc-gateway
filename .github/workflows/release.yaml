@@ -58,7 +58,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
           push: true
-          args: |
+          build-args: |
             COUPER_VERSION=${{ github.event.client_payload.version }}
 
       - name: Docker Hub Description
