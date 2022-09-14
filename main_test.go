@@ -24,10 +24,18 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	log.Print("docker-compose up ...")
-	cmd := exec.Command("docker-compose", "-f", "test/docker-compose.yml", "up", "-d")
+	log.Print("docker-compose pull ...")
+	cmd := exec.Command("docker-compose", "-f", "test/docker-compose.yml", "pull")
 	cmd.Stdout = io.Discard
 	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print("docker-compose up ...")
+	cmd = exec.Command("docker-compose", "-f", "test/docker-compose.yml", "up", "-d")
+	cmd.Stdout = io.Discard
+	err = cmd.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
