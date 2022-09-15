@@ -27,6 +27,7 @@ server "oauth-as" {
           id_token = jwt_sign("token", {
             aud = request.headers.authorization != null ? split(":", base64_decode(substr(request.headers.authorization, 6, -1)))[0] : request.form_body.client_id[0]
             sub = "john"
+            email = "john@example.com"
             # fake: set code as nonce, if not default code value
             nonce = request.form_body.code[0] == "asdf" ? null : request.form_body.code[0]
           })
