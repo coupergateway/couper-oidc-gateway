@@ -40,17 +40,17 @@ server "oidc-gate" {
     access_control = ["oidc"]
 
     response {
-      status = env.REQUIRED_EMAIL_DOMAINS == "" || contains(split(",", env.REQUIRED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? 303 : 403
+      status = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? 303 : 403
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "${env.TOKEN_COOKIE_NAME}=${env.REQUIRED_EMAIL_DOMAINS == "" || contains(split(",", env.REQUIRED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? jwt_sign("AccessToken", {}) : ""};HttpOnly;Secure;Path=/",
+          "${env.TOKEN_COOKIE_NAME}=${env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? jwt_sign("AccessToken", {}) : ""};HttpOnly;Secure;Path=/",
           "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
-        content-type = env.REQUIRED_EMAIL_DOMAINS == "" || contains(split(",", env.REQUIRED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "text/html" : ""
-        location = env.REQUIRED_EMAIL_DOMAINS == "" || contains(split(",", env.REQUIRED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? relative_url(request.query.state[0]) : ""
+        content-type = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "text/html" : ""
+        location = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? relative_url(request.query.state[0]) : ""
       }
-      body = env.REQUIRED_EMAIL_DOMAINS == "" || contains(split(",", env.REQUIRED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "" : <<-EOF
+      body = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "" : <<-EOF
 <!DOCTYPE html><html><head>
 <title>access control error</title>
 </head><body><h1>access control error</h1>
@@ -68,7 +68,7 @@ definitions {
     client_secret = env.OIDC_CLIENT_SECRET
     redirect_uri = "/_couper/oidc/callback"
     verifier_value = request.cookies[env.VERIFIER_COOKIE_NAME]
-    scope = env.REQUIRED_EMAIL_DOMAINS == "" ? "" : "email"
+    scope = env.ALLOWED_EMAIL_DOMAINS == "" ? "" : "email"
 
     error_handler {
       set_response_headers = {
@@ -128,7 +128,7 @@ defaults {
     BACKEND_TTFB_TIMEOUT = "60s"
     BACKEND_TIMEOUT = "300s"
     BACKEND_DISABLE_CERTIFICATE_VALIDATION = "false"
-    REQUIRED_EMAIL_DOMAINS = ""
+    ALLOWED_EMAIL_DOMAINS = ""
     COUPER_SECURE_COOKIES="" # override in test
   }
 }

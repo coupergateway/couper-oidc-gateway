@@ -41,7 +41,7 @@ Set at least the following variables:
 | `BACKEND_TTFB_TIMEOUT`                   | duration | `60s`                  | The duration from writing the full request to the origin and receiving the answer                                                                                     | -                                              |
 | `BACKEND_TIMEOUT`                        | duration | `300s`                 | The total deadline duration a backend request has for write and read/pipe                                                                                             | -                                              |
 | `BACKEND_DISABLE_CERTIFICATE_VALIDATION` | bool     | `false`                | Disables the peer certificate validation for the protected service                                                                                                    | -                                              |
-| `REQUIRED_EMAIL_DOMAINS`                 | string   | -                      | If non-empty: a list of comma-separated domains, one of which the user's email address (as per the ID token's `email` claim) must have, in order for the user to pass | `example.com,example.org`                      |
+| `ALLOWED_EMAIL_DOMAINS`                  | string   | -                      | If non-empty: a list of comma-separated domains, one of which the user's email address (as per the ID token's `email` claim) must have, in order for the user to pass | `example.com,example.org`                      |
 
 | Duration units | Description  |
 |:---------------|:-------------|
