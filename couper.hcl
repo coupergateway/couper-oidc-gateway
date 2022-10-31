@@ -40,17 +40,17 @@ server "oidc-gate" {
     access_control = ["oidc"]
 
     response {
-      status = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? 303 : 403
+      status = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", default(request.context.oidc.id_token_claims.email, "@"))[1]) ? 303 : 403
       headers = {
         cache-control = "no-cache,no-store"
         set-cookie = [
-          "${env.TOKEN_COOKIE_NAME}=${env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? jwt_sign("AccessToken", {}) : ""};HttpOnly;Secure;Path=/",
+          "${env.TOKEN_COOKIE_NAME}=${env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", default(request.context.oidc.id_token_claims.email, "@"))[1]) ? jwt_sign("AccessToken", {}) : ""};HttpOnly;Secure;Path=/",
           "${env.VERIFIER_COOKIE_NAME}=;HttpOnly;Secure;Path=/_couper/oidc/callback;Max-Age=0"
         ]
-        content-type = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "text/html" : ""
-        location = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? relative_url(request.query.state[0]) : ""
+        content-type = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", default(request.context.oidc.id_token_claims.email, "@"))[1]) ? "text/html" : ""
+        location = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", default(request.context.oidc.id_token_claims.email, "@"))[1]) ? relative_url(request.query.state[0]) : ""
       }
-      body = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", request.context.oidc.id_token_claims.email)[1]) ? "" : <<-EOF
+      body = env.ALLOWED_EMAIL_DOMAINS == "" || contains(split(",", env.ALLOWED_EMAIL_DOMAINS), split("@", default(request.context.oidc.id_token_claims.email, "@"))[1]) ? "" : <<-EOF
 <!DOCTYPE html><html><head>
 <title>access control error</title>
 </head><body><h1>access control error</h1>

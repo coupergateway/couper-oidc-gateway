@@ -5,6 +5,7 @@ on:
     types: [ published ]
   repository_dispatch:
     types: edge-build
+  workflow_dispatch:
 jobs:
   test:
     uses: avenga/couper-oidc-gateway/.github/workflows/test.yaml@master
