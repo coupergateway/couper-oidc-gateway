@@ -65,7 +65,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           push: true
           build-args: |
-            COUPER_VERSION=${{ github.event.client_payload.version }}
+            COUPER_VERSION=${{ github.event.client_payload.version || 'edge' }}
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
