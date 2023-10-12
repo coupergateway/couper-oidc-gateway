@@ -1,4 +1,4 @@
-module github.com/avenga/couper-oidc-gateway
+module github.com/coupergateway/couper-oidc-gateway
 
 go 1.18
 

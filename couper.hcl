@@ -54,7 +54,7 @@ server "oidc-gate" {
 <!DOCTYPE html><html><head>
 <title>access control error</title>
 </head><body><h1>access control error</h1>
-<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
+<p>Authentication powered by <a href="https://github.com/coupergateway/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
 </body></html>
 EOF
     }
@@ -100,7 +100,7 @@ definitions {
 <meta http-equiv="refresh" content="0;url=/_couper/oidc/start?url=${url_encode(relative_url(request.url))}">
 </head><body><h1>Authentication required</h1>
 <p><a href="/_couper/oidc/start?url=${url_encode(relative_url(request.url))}">Proceed to login</a></p>
-<p>Authentication powered by <a href="https://github.com/avenga/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
+<p>Authentication powered by <a href="https://github.com/coupergateway/couper-oidc-gateway" target="_blank">Couper OIDC Gateway</a></p>
 </body></html>
 EOB
       }

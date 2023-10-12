@@ -26,7 +26,7 @@ jobs:
           go-version: '1.18'
       - name: 'setup go dep'
         run: go mod download
-      - name: 'test with avenga/couper'
+      - name: 'test with coupergateway/couper'
         run: |
           docker version
           go test -v -race -timeout 30s main_test.go

@@ -1,8 +1,8 @@
 # Couper OIDC Gateway
 
-A ready-to-use [Docker image](https://hub.docker.com/r/avenga/couper-oidc-gateway) to spin up an OpenID Connect gateway using the [Couper API Gateway](https://github.com/avenga/couper):
+A ready-to-use [Docker image](https://hub.docker.com/r/coupergateway/couper-oidc-gateway) to spin up an OpenID Connect gateway using the [Couper API Gateway](https://github.com/coupergateway/couper):
 
-`docker pull avenga/couper-oidc-gateway`
+`docker pull coupergateway/couper-oidc-gateway`
 
 ## How it works
 
@@ -23,7 +23,7 @@ Set at least the following variables:
 ## Environment Variables
 
 > **Note**: Along with this container specific variables you can also configure the underlying Couper with its own
-> [environment variable options](https://github.com/avenga/couper/blob/master/DOCKER.md#environment-options).
+> [environment variable options](https://github.com/coupergateway/couper/blob/master/DOCKER.md#environment-options).
 > For example you may have to use a custom ca-certificate with `COUPER_CA_FILE`.
 
 | Variable                                 | Type     | Default                | Description                                                                                                                                                           | Example                                        |

@@ -1,7 +1,7 @@
 version: '3'
 services:
   couper-oidc-gateway:
-    image: avenga/couper
+    image: coupergateway/couper
     hostname: couper
     volumes:
       - ../couper.hcl:/conf/couper.hcl
@@ -16,7 +16,7 @@ services:
       - OIDC_CLIENT_SECRET=bar
       - COUPER_SECURE_COOKIES=strip
   couper-test-openid-provider:
-    image: avenga/couper
+    image: coupergateway/couper
     hostname: testop
     volumes:
       - ./openid-provider:/conf
