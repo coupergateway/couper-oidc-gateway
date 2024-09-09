@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -22,36 +21,6 @@ import (
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
 )
-
-func TestMain(m *testing.M) {
-	log.Print("docker-compose pull ...")
-	cmd := exec.Command("docker-compose", "-f", "test/docker-compose.yml", "pull")
-	cmd.Stdout = io.Discard
-	err := cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Print("docker-compose up ...")
-	cmd = exec.Command("docker-compose", "-f", "test/docker-compose.yml", "up", "-d")
-	cmd.Stdout = io.Discard
-	err = cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	code := m.Run()
-
-	log.Print("docker-compose down ...")
-	cmd = exec.Command("docker-compose", "-f", "test/docker-compose.yml", "down")
-	cmd.Stdout = io.Discard
-	err = cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	os.Exit(code)
-}
 
 func TestOpenIDConnectFlow(t *testing.T) {
 	// create new remote chrome context (tab)
